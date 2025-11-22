@@ -353,6 +353,8 @@ static void show_vma_header_prefix(struct seq_file *m,
 extern void susfs_sus_ino_for_show_map_vma(unsigned long ino, dev_t *out_dev, unsigned long *out_ino);
 #endif
 
+static void
+show_map_vma(struct seq_file *m, struct vm_area_struct *vma)
 {
 	struct mm_struct *mm = vma->vm_mm;
 	struct file *file = vma->vm_file;
@@ -378,13 +380,13 @@ extern void susfs_sus_ino_for_show_map_vma(unsigned long ino, dev_t *out_dev, un
 bypass_orig_flow:
 #endif
 		pgoff = ((loff_t)vma->vm_pgoff) << PAGE_SHIFT;
-		struct dentry *dentry = file->f_path.dentry;
+		dentry = file->f_path.dentry;
         if (dentry) {
         	const char *path = (const char *)dentry->d_name.name; 
             	if (strstr(path, "lineage")) { 
 	            	start = vma->vm_start;
 	             	end = vma->vm_end;
-	             	show_vma_header_prefix_fake(m, start, end, flags, pgoff, dev, ino);
+	             	show_vma_header_prefix(m, start, end, flags, pgoff, dev, ino);
                 	name = "/system/framework/framework-res.apk";
 		            goto done;
             	}
